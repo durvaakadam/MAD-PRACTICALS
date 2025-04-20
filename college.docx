@@ -1,0 +1,148 @@
+import 'package:flutter/material.dart';
+
+
+void main() {
+ runApp(CollegeWebsiteApp());
+}
+
+
+class CollegeWebsiteApp extends StatelessWidget {
+ @override
+ Widget build(BuildContext context) {
+   return MaterialApp(
+     title: 'XYZ College',
+     debugShowCheckedModeBanner: false,
+     theme: ThemeData(
+       primarySwatch: Colors.indigo,
+     ),
+     home: CollegeHomePage(),
+   );
+ }
+}
+
+
+class CollegeHomePage extends StatefulWidget {
+ @override
+ _CollegeHomePageState createState() => _CollegeHomePageState();
+}
+
+
+class _CollegeHomePageState extends State<CollegeHomePage> {
+ String selectedSection = 'Home';
+
+
+ final List<String> announcements = [
+   "Admissions for 2025 are open!",
+   "Library timings updated: 8 AM - 8 PM",
+   "Campus placements begin from May 10",
+ ];
+
+
+ Widget _buildContent() {
+   switch (selectedSection) {
+     case 'About Us':
+       return Text(
+           'XYZ College was established in 1990 and has been providing quality education ever since.',
+           style: TextStyle(fontSize: 16));
+     case 'Academics':
+       return Text('Courses offered: B.Tech, M.Tech, BBA, MBA, and more.',
+           style: TextStyle(fontSize: 16));
+     case 'Library':
+       return Text(
+           'Our library houses over 50,000 books, digital resources, and study areas.',
+           style: TextStyle(fontSize: 16));
+     case 'Placements':
+       return Text(
+           'Top recruiters: Google, Amazon, Infosys, TCS. 95% placement rate.',
+           style: TextStyle(fontSize: 16));
+     case 'Admissions':
+       return Text(
+           'Apply now through our online portal. Last date: June 15, 2025.',
+           style: TextStyle(fontSize: 16));
+     case 'Home':
+     default:
+       return Column(
+         crossAxisAlignment: CrossAxisAlignment.start,
+         children: [
+           Text(
+             'Welcome to XYZ College!',
+             style: Theme.of(context).textTheme.headlineSmall,
+           ),
+           SizedBox(height: 20),
+           Text('📢 Announcements',
+               style: Theme.of(context).textTheme.titleLarge),
+           SizedBox(height: 10),
+           ...announcements.map((a) => Card(
+             margin: EdgeInsets.symmetric(vertical: 6),
+             child: ListTile(
+               leading: Icon(Icons.campaign),
+               title: Text(a),
+             ),
+           )),
+         ],
+       );
+   }
+ }
+
+
+ void _selectSection(String section) {
+   setState(() {
+     selectedSection = section;
+     Navigator.pop(context); // Close the drawer
+   });
+ }
+
+
+ @override
+ Widget build(BuildContext context) {
+   return Scaffold(
+     appBar: AppBar(
+       title: Row(
+         children: [
+           Icon(Icons.school),
+           SizedBox(width: 10),
+           Text('XYZ College'),
+         ],
+       ),
+     ),
+     drawer: Drawer(
+       child: ListView(
+         padding: EdgeInsets.zero,
+         children: [
+           DrawerHeader(
+             decoration: BoxDecoration(color: Colors.indigo),
+             child: Column(
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                 Icon(Icons.school, size: 48, color: Colors.white),
+                 SizedBox(height: 10),
+                 Text('XYZ College',
+                     style: TextStyle(color: Colors.white, fontSize: 20)),
+               ],
+             ),
+           ),
+           _buildDrawerItem('Home'),
+           _buildDrawerItem('About Us'),
+           _buildDrawerItem('Academics'),
+           _buildDrawerItem('Library'),
+           _buildDrawerItem('Placements'),
+           _buildDrawerItem('Admissions'),
+         ],
+       ),
+     ),
+     body: SingleChildScrollView(
+       padding: EdgeInsets.all(16),
+       child: _buildContent(),
+     ),
+   );
+ }
+
+
+ ListTile _buildDrawerItem(String title) {
+   return ListTile(
+     leading: Icon(Icons.arrow_right),
+     title: Text(title),
+     onTap: () => _selectSection(title),
+   );
+ }
+}

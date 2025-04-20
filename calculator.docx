@@ -1,0 +1,153 @@
+import 'package:math_expressions/math_expressions.dart';
+import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
+
+
+void main() {
+ runApp(CalculatorApp());
+}
+
+
+class CalculatorApp extends StatelessWidget {
+ @override
+ Widget build(BuildContext context) {
+   return MaterialApp(
+     title: 'Calci',
+     theme: ThemeData.dark(), // Dark Theme
+     home: CalculatorPage(),
+     debugShowCheckedModeBanner: false,
+   );
+ }
+}
+
+
+class CalculatorPage extends StatefulWidget {
+ @override
+ _CalculatorPageState createState() => _CalculatorPageState();
+}
+
+
+class _CalculatorPageState extends State<CalculatorPage> {
+ String input = '';
+
+
+ void buttonPressed(String value) {
+   setState(() {
+     if (value == 'C') {
+       input = '';
+     } else if (value == '=') {
+       try {
+         input = _evaluate(input);
+       } catch (e) {
+         input = 'Error';
+       }
+     } else {
+       input += value;
+     }
+   });
+ }
+
+
+ String _evaluate(String expression) {
+   try {
+     if (expression.isEmpty) return '0';
+     if (RegExp(r'[+\-*/]$').hasMatch(expression)) {
+       expression = expression.substring(0, expression.length - 1);
+     }
+     Parser p = Parser();
+     Expression exp = p.parse(expression);
+     ContextModel cm = ContextModel();
+     double result = exp.evaluate(EvaluationType.REAL, cm);
+     return result.toString();
+   } catch (e) {
+     return 'Error';
+   }
+ }
+
+
+ Widget buildButton(String text,
+     {Color color = Colors.grey, Color textColor = Colors.white}) {
+   return GestureDetector(
+     onTap: () => buttonPressed(text),
+     child: Container(
+       margin: EdgeInsets.all(8),
+       decoration: BoxDecoration(
+         color: color,
+         borderRadius: BorderRadius.circular(16),
+       ),
+       child: Center(
+         child: Text(
+           text,
+           style: TextStyle(
+               fontSize: 26, fontWeight: FontWeight.bold, color: textColor),
+         ),
+       ),
+     ),
+   );
+ }
+
+
+ @override
+ Widget build(BuildContext context) {
+   final List<String> buttons = [
+     'C', '=', '-', '+',
+     '*', '/', '0', '1',
+     '2', '3', '4', '5',
+     '6', '7', '8', '9'
+   ];
+
+
+   return Scaffold(
+     backgroundColor: Colors.black,
+     body: SafeArea(
+       child: Column(
+         children: [
+           SizedBox(height: 20),
+           Text(
+             'Calculator',
+             style: TextStyle(
+               fontSize: 36,
+               fontWeight: FontWeight.bold,
+               color: Colors.orangeAccent,
+             ),
+           ),
+           Container(
+             alignment: Alignment.centerRight,
+             padding: EdgeInsets.all(24),
+             child: Text(
+               input,
+               style: TextStyle(fontSize: 32, color: Colors.white),
+             ),
+           ),
+           Expanded(
+             child: GridView.builder(
+               padding: EdgeInsets.all(16),
+               itemCount: buttons.length,
+               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                 crossAxisCount: 4,
+                 crossAxisSpacing: 16,
+                 mainAxisSpacing: 16,
+               ),
+               itemBuilder: (context, index) {
+                 String button = buttons[index];
+                 Color btnColor = ['+', '-', '*', '/', '='].contains(button)
+                     ? Colors.orange
+                     : button == 'C'
+                     ? Colors.red
+                     : Colors.grey[800]!;
+
+
+                 return buildButton(
+                   button,
+                   color: btnColor,
+                   textColor: Colors.white,
+                 );
+               },
+             ),
+           ),
+         ],
+       ),
+     ),
+   );
+ }
+}
