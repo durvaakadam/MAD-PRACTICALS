@@ -1,0 +1,59 @@
+A. Program
+1. Test Cases
+Here are 5 sample test cases (test/widget_test.dart):
+
+dart
+Copy code
+import 'package:flutter_test/flutter_test.dart';
+import 'package:my_app/main.dart';
+
+void main() {
+  testWidgets('App title appears', (WidgetTester tester) async {
+    await tester.pumpWidget(MyApp());
+    expect(find.text('My Flutter App'), findsOneWidget);
+  });
+
+  testWidgets('Counter increments', (WidgetTester tester) async {
+    await tester.pumpWidget(MyApp());
+    await tester.tap(find.byIcon(Icons.add));
+    await tester.pump();
+    expect(find.text('1'), findsOneWidget);
+  });
+
+  testWidgets('Login button is present', (WidgetTester tester) async {
+    await tester.pumpWidget(MyApp());
+    expect(find.text('Login'), findsOneWidget);
+  });
+
+  testWidgets('Navigates to Home after login', (WidgetTester tester) async {
+    await tester.pumpWidget(MyApp());
+    await tester.tap(find.text('Login'));
+    await tester.pumpAndSettle();
+    expect(find.text('Welcome Home'), findsOneWidget);
+  });
+
+  testWidgets('Accepts text input', (WidgetTester tester) async {
+    await tester.pumpWidget(MyApp());
+    await tester.enterText(find.byType(TextField), 'Hello');
+    expect(find.text('Hello'), findsOneWidget);
+  });
+2. Deploy and run the app on your mobile phone
+Steps: Pairing with Android Phone (Wireless Debugging)
+Enable Developer Mode:
+
+Go to Settings > About Phone > Software Information > Build Number → Tap 7 times.
+
+Enable Wireless Debugging:
+
+Go to Settings > Developer Options > Enable Wireless Debugging
+
+Ensure both phone and PC are connected to the same WiFi
+
+Pair device using ADB commands (in terminal):
+
+bash
+Copy code
+adb pair <ip>:<pairing_port>         // e.g., adb pair 192.168.1.10:12345
+adb connect <ip>:<connection_port>   // e.g., adb connect 192.168.1.10:5555
+adb devices                          // To check if the device is connected
+flutter run                          // Select device number shown
