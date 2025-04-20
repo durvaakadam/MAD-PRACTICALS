@@ -1,0 +1,12 @@
+1. create new repo
+2. git init
+git add --all
+git config --global user.name "Durva kadam"
+git config --global user.email "Durva@vv"
+git config --global --list
+git branch
+git branch -M main
+git add .
+git push -u origin main
+
+settings -> pages -> main -> /root -> save

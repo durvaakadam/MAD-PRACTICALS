@@ -1,0 +1,71 @@
+run: http://10.0.2.2:3000
+
+service.worker.js in public:
+
+self.addEventListener('install', (event) => {
+    console.log('Service Worker installing...');
+    event.waitUntil(self.skipWaiting()); // Immediately take over
+  });
+  
+  self.addEventListener('activate', (event) => {
+    console.log('Service Worker activated');
+  });
+  
+  self.addEventListener('fetch', (event) => {
+    console.log('Fetching:', event.request.url);
+  });
+  
+serviceWorkerRegistration in src:
+
+
+  export function register() {
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker
+          .register('/service-worker.js')
+          .then((registration) => {
+            console.log('Service Worker registered:', registration);
+          })
+          .catch((error) => {
+            console.error('Service Worker registration failed:', error);
+          });
+      });
+    }
+  }
+  
+  export function unregister() {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.ready.then((registration) => {
+        registration.unregister();
+      });
+    }
+  }
+  
+
+  index.js
+  
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import { Provider } from 'react-redux';
+import { store } from './stores';
+import { register } from './serviceWorkerRegistration'; // ✅ Import service worker logic
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+root.render(
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
+
+// ✅ Register service worker after app is rendered
+register();
+
+// Optional: measure performance
+reportWebVitals();
+
+
+TAKE SS OF APPLICATION IN CONSOLE
