@@ -1,0 +1,208 @@
+1. main.dart
+
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
+// Import your generated firebase_options.dart if using FlutterFire CLI
+// import 'firebase_options.dart';
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+// Uncomment and configure if using FlutterFire CLI generated options
+// options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(RestaurantApp());
+}
+class RestaurantApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Table Booking',
+      home: BookingForm(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+class BookingForm extends StatefulWidget {
+  @override
+  _BookingFormState createState() => _BookingFormState();
+}
+class _BookingFormState extends State<BookingForm> {
+  final _formKey = GlobalKey<FormState>();
+  final nameController = TextEditingController();
+  final phoneController = TextEditingController();
+  final dateController = TextEditingController();
+  final timeController = TextEditingController();
+  final guestsController = TextEditingController();
+  void submitBooking() {
+    if (_formKey.currentState!.validate()) {
+      final dbRef = FirebaseDatabase.instance.ref("bookings").push();
+      print("Submitting booking...");
+      dbRef.set({
+        "name": nameController.text.trim(),
+        "phone": phoneController.text.trim(),
+        "date": dateController.text.trim(),
+        "time": timeController.text.trim(),
+        "guests": guestsController.text.trim(),
+      }).then((_) {
+        print("Booking saved successfully");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Booking Submitted Successfully")),
+        );
+        _formKey.currentState!.reset();
+      }).catchError((error) {
+        print("Error saving booking: $error");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error: $error")),
+        );
+      });
+    }
+  }
+  @override
+  void dispose() {
+// Dispose controllers to free resources
+    nameController.dispose();
+    phoneController.dispose();
+    dateController.dispose();
+    timeController.dispose();
+    guestsController.dispose();
+    super.dispose();
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Restaurant Table Booking")),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              TextFormField(
+                controller: nameController,
+                decoration: InputDecoration(labelText: "Customer Name"),
+                validator: (value) =>
+                value == null || value.isEmpty ? 'Enter name' : null,
+              ),
+              TextFormField(
+                controller: phoneController,
+                decoration: InputDecoration(labelText: "Phone Number"),
+                keyboardType: TextInputType.phone,
+                validator: (value) =>
+                value == null || value.isEmpty ? 'Enter phone' : null,
+              ),
+              TextFormField(
+                controller: dateController,
+                decoration: InputDecoration(labelText: "Date (YYYY-MM-DD)"),
+                validator: (value) =>
+                value == null || value.isEmpty ? 'Enter date' : null,
+              ),
+              TextFormField(
+                controller: timeController,
+                decoration: InputDecoration(labelText: "Time (e.g. 7:00 PM)"),
+                validator: (value) =>
+                value == null || value.isEmpty ? 'Enter time' : null,
+              ),
+              TextFormField(
+                controller: guestsController,
+                decoration: InputDecoration(labelText: "Number of Guests"),
+                keyboardType: TextInputType.number,
+                validator: (value) =>
+                value == null || value.isEmpty ? 'Enter guests' : null,
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: submitBooking,
+                child: Text("Book Table"),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+app/build
+
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+android {
+    namespace = "com.example.mockexam"
+    compileSdk = flutter.compileSdkVersion
+    ndkVersion = flutter.ndkVersion
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        applicationId = "com.example.mockexam"
+        // You can update the following values to match your application needs.
+        // For more information, see: https://flutter.dev/to/review-gradle-config.
+        minSdk = flutter.minSdkVersion
+        targetSdk = flutter.targetSdkVersion
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
+    }
+
+    buildTypes {
+        release {
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig = signingConfigs.debug
+        }
+    }
+}
+
+flutter {
+    source = "../.."
+}
+
+apply plugin: 'com.google.gms.google-services'
+
+
+
+ardnoid/grade:
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.google.gms:google-services:4.3.15'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.buildDir = "../build"
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
+    project.evaluationDependsOn(":app")
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}
+
