@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 void main() {
   runApp(BookStoreApp());
 }
+
 class BookStoreApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -12,6 +13,7 @@ class BookStoreApp extends StatelessWidget {
     );
   }
 }
+
 class DisplayPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
