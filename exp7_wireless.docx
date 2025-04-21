@@ -1,3 +1,13 @@
+Pairing the device with my phone:
+Steps:
+1.enable developer mode on android phone:
+a)Go to settings>aboutphone>Softwareinformation>buildnumber(tap 7 times)
+b)Go back to settings and scroll down: Developer options>enable wirelessdebugging
+Ensure that pc and phone are connected on same wifi.
+c)tap on wireless debugging>pair device. And run below commands on pc.
+
+
+
 A. Program
 1. Test Cases
 Here are 5 sample test cases (test/widget_test.dart):
