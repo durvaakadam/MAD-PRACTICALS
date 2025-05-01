@@ -1,4 +1,4 @@
-1. ADD THIS IN PUBSPEC>YAML FILE
+1. ADD THIS IN PUBSPEC.YAML FILE
 
 dev_dependencies:
   flutter_test:
