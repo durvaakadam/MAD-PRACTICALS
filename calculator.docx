@@ -1,3 +1,16 @@
+1. ADD THIS IN PUBSPEC>YAML FILE
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  math_expressions: ^2.2.0
+  
+  
+then run: flutter pub get
+
+
+MAIN.dart
+
 import 'package:math_expressions/math_expressions.dart';
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';

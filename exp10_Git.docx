@@ -82,5 +82,5 @@ GITHUB: gh-pages root
 terminal:
 >git remote add origin https://github.com/durvaakadam/7new.git    
 npm install gh-pages --save-dev
-npm run Build
+npm run build
 npm run deploy
